@@ -18,4 +18,25 @@ header .container{
 .container img{
   margin-left: 40px;
 }
-
+main .form-section{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+main .form-title{
+  color: #134077;
+  margin-top: 50px;
+  font-size: 1.5rem;
+}
+main .form-container{
+  display: flex;
+  padding: 15px;
+  margin-top: 25px;
+  width: 662px;
+  border-radius: 19px;
+  border: 1px solid #134077;
+}
+form > input{
+  margin-bottom: 10px;
+}

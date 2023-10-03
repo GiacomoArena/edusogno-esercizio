@@ -1,5 +1,7 @@
 <?php
-    require_once('./php/config.php');
+    require_once(__DIR__.'/php/config.php');
+    //require_once(__DIR__.'/php/register.php');
+    
 
 ?>
 
@@ -23,7 +25,7 @@
     </header>
 
     <main>
-        
+        <!-- importo il form -->
         <?php include('./form/register.html'); ?>
 
     </main>
