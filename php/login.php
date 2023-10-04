@@ -27,7 +27,7 @@ if ($stmt->execute()) {
   } 
   else {
       // reindirizzo nella pagina del form di  login in caso di errore 
-      header("Location: ../form/login.html");
+      header("Location: ../index.php");
   }
 } else {
   echo "Errore durante il login.";
