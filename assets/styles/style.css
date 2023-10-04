@@ -81,6 +81,9 @@ form > input{
   border: none;
   border-bottom: 1px solid black;
 }
+.clicca-qui{
+  margin-top: 15px;
+}
 #submit{
   cursor: pointer;
   font-size: 20px;
@@ -193,4 +196,11 @@ main{
   border: none;
   border-radius: 11px;
   padding: 10px;
+}
+.no-event{
+  margin-top: 70px;
+  text-align: center;
+  color: #134077;
+  font-size: 32px;
+  font-weight: 700;
 }

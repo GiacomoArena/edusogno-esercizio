@@ -37,7 +37,7 @@ $stmt->bindValue(':email', "%{$user['email']}%", PDO::PARAM_STR);
 // Esecuzione della query
 if ($stmt->execute()) {
     $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
-  
+
 } else {
     echo "Errore durante il recupero degli eventi dell'utente.";
 }
@@ -79,9 +79,16 @@ $conn = null;
       </h2>
 
       <div class="events-container" >
+      
+      <span class='no-event'>
+      <?php 
+        if (count($events) == 0) {
+          echo 'Mi spiace ma non ci sono eventi al momento';
+        }
+      ?>
+      </span>
       <?php foreach ($events as $event):?>
           <div class="event">
-
             <h4>
               <?php echo $event['nome_evento']; ?>
             </h4>

@@ -1,8 +1,6 @@
 <?php
     require_once(__DIR__.'/php/config.php');
-    //require_once(__DIR__.'/php/register.php');
     
-
 ?>
 
 <!DOCTYPE html>
@@ -38,6 +36,7 @@
         <?php
             include('./form/register.html'); 
             include('./form/login.html'); 
+            include('./form/form_password.html'); 
         ?>
 
         <?php
