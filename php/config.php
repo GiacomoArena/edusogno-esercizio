@@ -11,24 +11,46 @@ try {
     echo "Errore nella connessione al database: " . $e->getMessage();
 }
 
-// Creazione della tabella utenti
-$queryCreazioneTabellaUtenti = "
-CREATE TABLE IF NOT EXISTS utenti (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(50) NOT NULL,
-    cognome VARCHAR(50) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    token VARCHAR(255) NOT NULL
-)";
+// Verifico se le tabelle utenti ed eventi esistono nel database
+$queryCheckTables = "SHOW TABLES LIKE 'utenti'";
+$stmtCheckTables = $conn->prepare($queryCheckTables);
+$stmtCheckTables->execute();
+$tablesExist = $stmtCheckTables->fetch(PDO::FETCH_NUM);
 
-try {
-    $conn->exec($queryCreazioneTabellaUtenti);
-} catch (PDOException $e) {
-    echo "Errore nella creazione della tabella 'utenti': " . $e->getMessage();
-}
+if (!$tablesExist) {
+    // Creazione della tabella utenti
+    $queryCreazioneTabellaUtenti = "
+    CREATE TABLE IF NOT EXISTS utenti (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        nome VARCHAR(50) NOT NULL,
+        cognome VARCHAR(50) NOT NULL,
+        email VARCHAR(100) NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        token VARCHAR(255) NOT NULL
+    )";
 
-//creo e popolo la tabella utenti 
+    try {
+        $conn->exec($queryCreazioneTabellaUtenti);
+    } catch (PDOException $e) {
+        echo "Errore nella creazione della tabella 'utenti': " . $e->getMessage();
+    }
+
+    // Creazione della tabella eventi
+    $queryCreazioneTabellaEventi = "
+    CREATE TABLE IF NOT EXISTS eventi (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        attendees VARCHAR(255) NOT NULL,
+        nome_evento VARCHAR(100) NOT NULL,
+        data_evento DATETIME NOT NULL
+    )";
+
+    try {
+        $conn->exec($queryCreazioneTabellaEventi);
+    } catch (PDOException $e) {
+        echo "Errore nella creazione della tabella 'eventi': " . $e->getMessage();
+    }
+
+//popolo la tabella utenti 
 $datiUtenti = array(
     array('Marco', 'Rossi', 'ulysses200915@varen8.com', 'Edusogno123'),
     array('Filippo', 'D’Amelio', 'qmonkey14@falixiao.com', 'Edusogno?123'),
@@ -58,19 +80,14 @@ foreach ($datiUtenti as $utente) {
     }
 }
 
-
-
-//     /*creo e popolo la tabella utenti  /*
-
-
-// creo e popolo la tabella eventi 
+// popolo la tabella eventi 
 $datiEventi = array(
     array('ulysses200915@varen8.com,qmonkey14@falixiao.com,mavbafpcmq@hitbase.net', 'Test Edusogno 1', '2022-10-13 14:00'),
     array('dgipolga@edume.me,qmonkey14@falixiao.com,mavbafpcmq@hitbase.net', 'Test Edusogno 2', '2022-10-15 19:00'),
     array('dgipolga@edume.me,ulysses200915@varen8.com,giacomoare@hotmail.com,mavbafpcmq@hitbase.net', 'Test Edusogno 3', '2022-10-15 19:00')
 );
 
-// Per ciascun dato evento, verifica se esiste già nella tabella eventi
+// Per ciascun dato evento, verifico se esiste già nella tabella eventi
 foreach ($datiEventi as $evento) {
     $nomeEvento = $evento[1];
     $dataEvento = $evento[2];
@@ -89,4 +106,5 @@ foreach ($datiEventi as $evento) {
         $stmtInserimento->execute($evento);
     }
 }
-// **/ creo e popolo la tabella eventi /** */
+
+}

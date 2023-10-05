@@ -1,5 +1,8 @@
 <?php
 session_start();
+//prova
+$admin = ['giacomoare@hotmail.com','admin@admin.com'];
+//prova
 
 if (!isset($_SESSION['id'])) {
     // Se l'utente non è autenticato, reindirizza alla pagina di login
@@ -73,7 +76,7 @@ $conn = null;
     </header>
 
   <main>
-    
+    <?php if (!in_array($user['email'], $admin)): ?>
       <h2 class="dashTitle" >
         Ciao <?php echo $user['nome'] ?> ecco i tuoi eventi 
       </h2>
@@ -108,9 +111,14 @@ $conn = null;
       <img class="terza" src="../assets/img/3.png" alt="">
       <img class="mezzaluna" src="../assets/img/mezzaluna.png" alt="">
       <img class="razzo" src="../assets/img/razzo.png" alt="">
-    
+    <?php elseif (in_array($user['email'], $admin)):?>
+
+      <?php header("Location: dashboard_admin.php"); ?>
+      
+    <?php endif ?>
   </main>
 
+  
 <script src="assets/js/script.js"></script>
 </body>
 

@@ -19,6 +19,8 @@ require_once(__DIR__.'/config.php');
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- fonteawesome -->
+        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css' integrity='sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==' crossorigin='anonymous'/>
         <!-- font family -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,10 +43,15 @@ require_once(__DIR__.'/config.php');
             <div class="password-cnt">
                 <form method="post">
                     <label for="new_password">Nuova Password:</label>
-                    <input type="password" id="new_password" name="new_password" required>
+                    <input type="password" id="new_password" name="new_password" minlength="3" required>
 
                     <label for="confirm_password">Conferma Nuova Password:</label>
-                    <input type="password" id="confirm_password" name="confirm_password" required>
+                    <input type="password" id="confirm_password" name="confirm_password" minlength="3" required>
+
+                    <span id="password-error" class="error">Le password non corispondono!</span>
+
+                    <span id="eyePsw"><i class="fa-solid fa-eye"></i></span>
+
                     <button type="submit" id="submit" >Cambia Password</button>
                 </form>
             </div>
@@ -60,7 +67,7 @@ require_once(__DIR__.'/config.php');
                         $update_stmt->bindParam(':email', $user_email, PDO::PARAM_STR);
 
                         if ($update_stmt->execute()) {
-                            echo '<span>Password cambiata con successo. &nbsp;<a href="../index.php"> torna alla home</a></span>';
+                            echo '<span class="message-psw">Password cambiata con successo. &nbsp;<a href="../index.php"> torna alla home</a></span>';
                         } else {
                             echo '<span>Errore durante il cambio password riprova o &nbsp;</span><a href="../index.php"> torna alla home</a>';
                         }
@@ -81,7 +88,51 @@ require_once(__DIR__.'/config.php');
         </span>
     </main>
     
-    <script src="../assets/js/script.js"></script>
+    <script>
+        const password_input = document.getElementById('new_password');
+        const password_confr = document.getElementById('confirm_password');
+        const password_error = document.getElementById('password-error');
+        const eyePsw = document.getElementById("eyePsw");
+        const button  = document.getElementById('submit');
+        let passwordVisible = false;
+
+        password_error.style.color = 'red';
+        eyePsw.style.color = '#0057FF';
+
+        password_confr.addEventListener('input', () => {
+            const password = password_input.value;
+            const confirmed_password = password_confr.value;
+
+            if (confirmed_password.length === 0) {
+                password_error.style.display = 'none';
+            } else {
+                if (password !== confirmed_password) {
+                    password_error.style.display = 'block';
+                    password_error.style.opacity = '1';
+                    button.disabled = true;
+                } else {
+                    password_error.style.display = 'none';
+                    button.disabled = false;
+                }
+            }
+        });
+
+
+        eyePsw.addEventListener("click", function (event) {
+        passwordVisible = !passwordVisible;
+        if (passwordVisible) {
+          password_input.type = "text";
+          password_confr.type = "text";
+        } else {
+          password_input.type = "password";
+          password_confr.type = "password";
+        }
+      });
+
+      
+
+
+    </script>
 </body>
 </html>
 
