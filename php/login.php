@@ -3,7 +3,6 @@ require_once(__DIR__.'/config.php');
 // salvo i dati del form su una variabile tramite POST
 $email = $_POST['email'];
 $user_password = $_POST['password'];
-$counter = 0;
 // Creazione della query con parametri
 $query = "SELECT * FROM utenti WHERE email = :email AND password = :password";
 

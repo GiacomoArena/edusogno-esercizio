@@ -38,6 +38,9 @@ header .container{
   justify-content: center;
   align-items: center;
 }
+.form-section span{
+ padding-top: 15px;
+}
 .form-title{
   color: #134077;
   margin-top: 50px;
@@ -98,10 +101,10 @@ form > input{
   border: none;
   border-radius: 11px;
 }
-.eye,.eyeLog{
+.eye,.eyeLog,.eyePsw{
   position: relative;
 }
-.eye i, .eyeLog i{
+.eye i, .eyeLog i, .eyePsw{
   cursor: pointer;
   opacity: 1;
   position: absolute;
@@ -204,3 +207,32 @@ main{
   font-size: 32px;
   font-weight: 700;
 }
+.message-psw{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 70px;
+  text-align: center;
+  font-size: 32px;
+  color: #134077;
+  font-weight: 700;
+}
+.password-cnt{
+  width: 100%;
+  position: relative;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 35px;
+  margin-top: 25px;
+  max-width: 662px;
+  border-radius: 19px;
+  border: 1px solid #134077;
+  background-color: white;
+}
+.eyePsw{
+  top: 80px;
+  right: 55px;
+}
+
