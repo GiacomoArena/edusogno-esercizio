@@ -101,16 +101,16 @@ form > input{
   border: none;
   border-radius: 11px;
 }
-.eye,.eyeLog,.eyePsw{
+.eye,.eyeLog{
   position: relative;
 }
-.eye i, .eyeLog i, .eyePsw{
+.eye i, .eyeLog i{
   cursor: pointer;
   opacity: 1;
   position: absolute;
   font-size: 18px;
   color: #0057FF;
-  bottom: 20px;
+  bottom: 30px;
   right: 5px;
 }
 main{
