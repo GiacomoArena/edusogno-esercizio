@@ -231,8 +231,13 @@ main{
   border: 1px solid #134077;
   background-color: white;
 }
-.eyePsw{
-  top: 80px;
-  right: 55px;
+.message{
+  z-index: 100;
+  position: absolute;
+  right: 10%;
+  bottom: 40%;
+  font-size: 35px;
+  font-weight: 700;
+  color: #134077;
 }
 
