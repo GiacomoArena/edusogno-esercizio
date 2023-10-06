@@ -108,3 +108,34 @@ foreach ($datiEventi as $evento) {
 }
 
 }
+$queryCheckAdminTable = "SHOW TABLES LIKE 'admin_users'";
+$stmtCheckAdminTable = $conn->prepare($queryCheckAdminTable);
+$stmtCheckAdminTable->execute();
+$adminTableExists = $stmtCheckAdminTable->fetch(PDO::FETCH_NUM);
+
+if (!$adminTableExists) {
+    $queryCreazioneTabellaAdmin = "
+    CREATE TABLE IF NOT EXISTS admin_users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        email VARCHAR(255) NOT NULL
+    )";
+
+    try {
+        $conn->exec($queryCreazioneTabellaAdmin);
+    } catch (PDOException $e) {
+        echo "Errore nella creazione della tabella 'admin_users': " . $e->getMessage();
+    }// Popolamento della tabella admin_users
+    $datiAdmin = array(
+        'ulysses200915@varen8.com',
+        'admin@admin.com'
+    );
+
+    foreach ($datiAdmin as $adminEmail) {
+        $queryInserimentoAdmin = "INSERT INTO admin_users (email) VALUES (:email)";
+        $stmtInserimentoAdmin = $conn->prepare($queryInserimentoAdmin);
+        $stmtInserimentoAdmin->bindParam(':email', $adminEmail, PDO::PARAM_STR);
+        $stmtInserimentoAdmin->execute();
+    }
+
+}
+

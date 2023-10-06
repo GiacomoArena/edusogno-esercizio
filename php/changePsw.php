@@ -52,7 +52,7 @@ require_once(__DIR__.'/config.php');
 
                     <span id="eyePsw"><i class="fa-solid fa-eye"></i></span>
 
-                    <button type="submit" id="submit" >Cambia Password</button>
+                    <button type="submit" class="submit" >Cambia Password</button>
                 </form>
             </div>
             <?php 

@@ -1,6 +1,35 @@
 <?php
 require_once(__DIR__.'/config.php');
 
+session_start();
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+  if (isset($_POST['new_admin'])) {
+      // salvo i dati in una variabile
+      $newAdmins = $_POST['new_admin'];
+
+      // Rimuovo gli spazi extra dopo le virgole
+      $newAdmins = preg_replace('/\s*,\s*/', ',', $newAdmins);
+      
+      // Suddivido i dati in un array
+      $newAdminEmails = explode(",", $newAdmins);
+
+      //cancello tutti i record esistenti
+      $queryDeleteAdmins = "DELETE FROM admin_users";
+      $stmtDeleteAdmins = $conn->prepare($queryDeleteAdmins);
+      $stmtDeleteAdmins->execute();
+
+      //inserisci i nuovi dati
+      $queryInsertAdmin = "INSERT INTO admin_users (email) VALUES (:email)";
+      $stmtInsertAdmin = $conn->prepare($queryInsertAdmin);
+      
+      foreach ($newAdminEmails as $adminEmail) {
+          // Esegui l'inserimento per ogni email
+          $stmtInsertAdmin->bindParam(':email', $adminEmail, PDO::PARAM_STR);
+          $stmtInsertAdmin->execute();
+      }
+  }
+}
+
 //se i valori sono stati dichiarati allora li salviamo in una variabile 
 if (isset($_POST["attendees"]) && isset($_POST["nomeEvento"]) && isset($_POST["meeting-time"])) {
   
@@ -9,7 +38,7 @@ if (isset($_POST["attendees"]) && isset($_POST["nomeEvento"]) && isset($_POST["m
   $new_data_evento = $_POST["meeting-time"];
   
 }
-
+//se i valori sono stati dichiarati allora li salviamo in una variabile 
 if (isset($_POST["edit_attendees"]) && isset($_POST["edit_nomeEvento"]) && isset($_POST["edit_meeting-time"]) && isset($_POST["edit_event_id"])) {
   $edit_event_id = $_POST["edit_event_id"];
   $edit_attendees = $_POST["edit_attendees"];
@@ -140,11 +169,12 @@ $events = $eventController->getEvents();
 
 // Elimino un evento, passo l'ID dell'evento da eliminare
 if (isset($_POST['delete_event'])) {
-
-    $event_id = $_POST['event_id'];
-//    elimino l'evento
-    $eventController->deleteEvent($event_id);
+  $event_id = $_POST['event_id'];
+  echo "Event ID to delete: " . $event_id; // Stampa l'ID dell'evento da eliminare per scopi di debug
+  // elimino l'evento
+  $eventController->deleteEvent($event_id);
 }
+
 //edit
 
 function getEventDetails($edit_event_id, $conn) {
@@ -186,6 +216,8 @@ if (isset($_POST["edit_attendees"]) && isset($_POST["edit_nomeEvento"]) && isset
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- fontawesome -->
+        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css' integrity='sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==' crossorigin='anonymous'/>
         <!-- font family -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -206,9 +238,10 @@ if (isset($_POST["edit_attendees"]) && isset($_POST["edit_nomeEvento"]) && isset
 
   <main>
       <div class="events-container" >
-        <h2>Dashboard Amministratore</h2>
+        <h2 class="dashTitle" >Dashboard Amministratore</h2>
         <br>
-      <button> <a href="../form/create.html">Crea unnuovo evento</a></button>
+      <button class="button"> <a href="../form/create.html">Nuovo Evento<i class="fa-solid fa-plus"></i></a></button>
+      <button class="button admin_edit"> <a href="admin_edit.php">Admin <i class="fa-solid fa-user-plus"></i></a></button>
       </div>
       <img class="cerchio" src="../assets/img/cerchio.png" alt="">
       <img class="prima" src="../assets/img/1.png" alt="">
@@ -224,11 +257,14 @@ if (isset($_POST["edit_attendees"]) && isset($_POST["edit_nomeEvento"]) && isset
             <h4><?php echo $event->nome_evento; ?></h4>
             <p><?php echo $event->data_evento; ?></p>
             
-            <button class="view-details" data-event-id="<?php echo $event->id; ?>">Dettagli</button>
-            <button class="edit-event" data-event-id="<?php echo $event->id; ?>">Modifica evento</button>
+            <button class="edit-event" data-event-id="<?php echo $event->id; ?>"><i class="fa-solid fa-pencil"></i></button>
+
             <form method="post">
-                <input type="hidden" name="event_id" value="<?php echo $event->id; ?>">
-                <button type="submit" name="delete_event" data-event-id="<?php echo $event->id; ?>">Elimina</button>
+              <button class="delete-event" type="submit" name="delete_event" data-event-id="<?php echo $event->id; ?>"><i class="fa-solid fa-trash"></i></button>
+              <input type="hidden" name="event_id" value="<?php echo $event->id; ?>">
+              <span class="wiev-detail-container">
+                <button class="view-details submit" data-event-id="<?php echo $event->id; ?>">Dettagli</i></button>
+              </span>
             </form>
         </div>
     <?php endforeach; ?>
@@ -239,19 +275,19 @@ if (isset($_POST["edit_attendees"]) && isset($_POST["edit_nomeEvento"]) && isset
     const viewButtons = document.querySelectorAll('.view-details');
     const editButtons = document.querySelectorAll('.edit-event');
 
-    viewButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const eventId = this.getAttribute('data-event-id');
 
-            // Reindirizza l'utente alla pagina di dettaglio e includi l'ID come parametro nell'URL
-            window.location.href = 'event_details.php?event_id=' + eventId;
-        });
+    viewButtons.forEach(button => {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        const eventId = this.getAttribute('data-event-id');
+        // Reindirizza l'utente alla pagina di dettaglio e includi l'ID come parametro nell'URL
+        window.location.href = 'event_details.php?event_id=' + eventId;
     });
+});
 
     editButtons.forEach(button => {
         button.addEventListener('click', function() {
             const eventId = this.getAttribute('data-event-id');
-
             // Reindirizza l'utente alla pagina di modifica e includi l'ID come parametro nell'URL
             window.location.href = 'edit.php?event_id=' + eventId;
         });
