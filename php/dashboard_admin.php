@@ -9,6 +9,15 @@ if (isset($_POST["attendees"]) && isset($_POST["nomeEvento"]) && isset($_POST["m
   $new_data_evento = $_POST["meeting-time"];
   
 }
+
+if (isset($_POST["edit_attendees"]) && isset($_POST["edit_nomeEvento"]) && isset($_POST["edit_meeting-time"]) && isset($_POST["edit_event_id"])) {
+  $edit_event_id = $_POST["edit_event_id"];
+  $edit_attendees = $_POST["edit_attendees"];
+  $edit_nome_evento = $_POST["edit_nomeEvento"];
+  $edit_data_evento = $_POST["edit_meeting-time"];
+  echo $edit_event_id ;
+}
+
 //query
 $query_utenti = "SELECT * FROM utenti";
 $stmt = $conn->prepare($query_utenti);
@@ -136,6 +145,36 @@ if (isset($_POST['delete_event'])) {
 //    elimino l'evento
     $eventController->deleteEvent($event_id);
 }
+//edit
+
+function getEventDetails($edit_event_id, $conn) {
+  $query = "SELECT * FROM eventi WHERE id = :edit_event_id";
+  $stmt = $conn->prepare($query);
+  $stmt->bindParam(':edit_event_id', $edit_event_id, PDO::PARAM_INT);
+  
+  if ($stmt->execute()) {
+      return $stmt->fetch(PDO::FETCH_OBJ);
+  } else {
+      return false;
+  }
+}
+
+
+if (isset($_POST["edit_attendees"]) && isset($_POST["edit_nomeEvento"]) && isset($_POST["edit_meeting-time"])&& isset($_POST["edit_event_id"])) {
+
+  $evento = getEventDetails($edit_event_id, $conn);
+  // Effettua la modifica dell'evento
+  
+  $evento->attendees = $edit_attendees;
+  $evento->nome_evento = $edit_nome_evento;
+  $evento->data_evento = $edit_data_evento;
+  
+  // Chiama la funzione editEvent per salvare le modifiche nel database
+  $eventController->editEvent($evento);
+
+  header('Location: ' . $_SERVER['PHP_SELF']);
+  exit;
+}
 
 ?>
 
@@ -185,6 +224,8 @@ if (isset($_POST['delete_event'])) {
             <h4><?php echo $event->nome_evento; ?></h4>
             <p><?php echo $event->data_evento; ?></p>
             
+            <button class="view-details" data-event-id="<?php echo $event->id; ?>">Dettagli</button>
+            <button class="edit-event" data-event-id="<?php echo $event->id; ?>">Modifica evento</button>
             <form method="post">
                 <input type="hidden" name="event_id" value="<?php echo $event->id; ?>">
                 <button type="submit" name="delete_event" data-event-id="<?php echo $event->id; ?>">Elimina</button>
@@ -194,7 +235,28 @@ if (isset($_POST['delete_event'])) {
     </div>
 
   </main>
-<script src="assets/js/script.js"></script>
+  <script>
+    const viewButtons = document.querySelectorAll('.view-details');
+    const editButtons = document.querySelectorAll('.edit-event');
+
+    viewButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const eventId = this.getAttribute('data-event-id');
+
+            // Reindirizza l'utente alla pagina di dettaglio e includi l'ID come parametro nell'URL
+            window.location.href = 'event_details.php?event_id=' + eventId;
+        });
+    });
+
+    editButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const eventId = this.getAttribute('data-event-id');
+
+            // Reindirizza l'utente alla pagina di modifica e includi l'ID come parametro nell'URL
+            window.location.href = 'edit.php?event_id=' + eventId;
+        });
+    });
+  </script>
 </body>
 
 </html>
