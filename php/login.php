@@ -26,8 +26,9 @@ if ($stmt->execute()) {
   } 
   else {
       // reindirizzo nella pagina del form di  login in caso di errore 
-
-      header("Location: ../index.php") ;
+      session_start();
+      $_SESSION['alertMessage'] = 'Dati di accesso non validi. Utente non registrato.';
+      header("Location: ../index.php");
   }
 } else {
   echo "Errore durante il login.";

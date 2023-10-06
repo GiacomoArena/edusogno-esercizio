@@ -1,6 +1,14 @@
 <?php
     require_once(__DIR__.'/php/config.php');
-    
+    session_start();
+
+    if (isset($_SESSION['alertMessage'])) {
+        $alertMessage = $_SESSION['alertMessage'];
+        
+        unset($_SESSION['alertMessage']);
+    } else {
+        $alertMessage = '';
+    }
 ?>
 
 <!DOCTYPE html>
@@ -42,6 +50,9 @@
         <?php
             include('./form/background.html');
         ?>
+    <div class="alert">
+        <?php echo $alertMessage; ?>
+    </div>
     </main>
 
 <script src="assets/js/script.js"></script>
