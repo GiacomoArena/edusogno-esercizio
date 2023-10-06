@@ -86,13 +86,15 @@ $conn = null;
 
       <div class="events-container" >
       
-      <span class='no-event'>
-      <?php 
-        if (count($events) == 0) {
-          echo 'Mi spiace ma non ci sono eventi al momento';
-        }
-      ?>
-      </span>
+      
+      <?php if (count($events) == 0): ?>
+          <span class='no-event'>
+          non ci sono eventi al momento
+          <a href="../index.php">Torna indietro</a>
+          </span>
+          
+        <?php   endif  ?>
+      
       <?php foreach ($events as $event):?>
           <div class="event">
             <h4>

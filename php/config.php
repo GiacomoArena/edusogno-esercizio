@@ -55,7 +55,8 @@ $datiUtenti = array(
     array('Marco', 'Rossi', 'ulysses200915@varen8.com', 'Edusogno123'),
     array('Filippo', 'D’Amelio', 'qmonkey14@falixiao.com', 'Edusogno?123'),
     array('Gian Luca', 'Carta', 'mavbafpcmq@hitbase.net', 'EdusognoCiao'),
-    array('Stella', 'De Grandis', 'dgipolga@edume.me', 'EdusognoGia')
+    array('Stella', 'De Grandis', 'dgipolga@edume.me', 'EdusognoGia'),
+    array('Admin', 'Admin', 'admin@admin.com', 'admin')
 );
 
 // Per ogni dato utente, verifica se esiste già nella tabella utenti ed evita di reinserire lo stesso elemento all'avvio della pagina
